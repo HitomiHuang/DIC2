@@ -1,0 +1,5 @@
+# Local verification environment, tested with Python 3.14.3.
+# The browser uses the packages bundled with Pyodide 0.27.7 instead.
+numpy==2.5.4
+pandas==3.0.6
+scikit-learn==1.9.1

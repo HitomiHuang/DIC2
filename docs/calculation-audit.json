@@ -1,0 +1,367 @@
+{
+  "status": "passed",
+  "verified_points": 25,
+  "independent_method": "NumPy OLS, coordinate descent, RFE elimination, exhaustive 3-fold CV",
+  "source_sha256": "c6075ca5a7551243b31193bad9228f0a1b9468cdde2475c6586c56dcfac5630d",
+  "training_samples": [
+    13,
+    5,
+    38,
+    9,
+    4,
+    7,
+    42,
+    47,
+    48,
+    16,
+    10,
+    17,
+    25,
+    35,
+    32,
+    1,
+    45,
+    28,
+    34,
+    6,
+    30,
+    12,
+    37,
+    2,
+    22,
+    3,
+    44,
+    36,
+    24,
+    41,
+    11,
+    23,
+    19,
+    50,
+    21,
+    8,
+    43,
+    15,
+    29,
+    39
+  ],
+  "test_samples": [
+    14,
+    40,
+    31,
+    46,
+    18,
+    49,
+    27,
+    26,
+    33,
+    20
+  ],
+  "max_metric_absolute_error": 1.8189894035458565e-11,
+  "max_prediction_absolute_error": 8.003553375601768e-11,
+  "rows": [
+    {
+      "method": "lasso",
+      "k": 1,
+      "rmse": 7714.334890830185,
+      "r2": 0.9265108109341951,
+      "mae": 6077.363300620397,
+      "features": [
+        "R&D Spend"
+      ]
+    },
+    {
+      "method": "elastic",
+      "k": 1,
+      "rmse": 7714.334890830185,
+      "r2": 0.9265108109341951,
+      "mae": 6077.363300620397,
+      "features": [
+        "R&D Spend"
+      ]
+    },
+    {
+      "method": "rfe",
+      "k": 1,
+      "rmse": 7714.334890830185,
+      "r2": 0.9265108109341951,
+      "mae": 6077.363300620397,
+      "features": [
+        "R&D Spend"
+      ]
+    },
+    {
+      "method": "forward",
+      "k": 1,
+      "rmse": 7714.334890830185,
+      "r2": 0.9265108109341951,
+      "mae": 6077.363300620397,
+      "features": [
+        "R&D Spend"
+      ]
+    },
+    {
+      "method": "exhaustive",
+      "k": 1,
+      "rmse": 7714.334890830185,
+      "r2": 0.9265108109341951,
+      "mae": 6077.363300620397,
+      "features": [
+        "R&D Spend"
+      ]
+    },
+    {
+      "method": "lasso",
+      "k": 2,
+      "rmse": 8206.32881316586,
+      "r2": 0.9168381183550246,
+      "mae": 6469.181721468596,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "elastic",
+      "k": 2,
+      "rmse": 8206.32881316586,
+      "r2": 0.9168381183550246,
+      "mae": 6469.181721468596,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "rfe",
+      "k": 2,
+      "rmse": 8206.32881316586,
+      "r2": 0.9168381183550246,
+      "mae": 6469.181721468596,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "forward",
+      "k": 2,
+      "rmse": 9152.274782350903,
+      "r2": 0.8965609365509308,
+      "mae": 7181.327131714381,
+      "features": [
+        "R&D Spend",
+        "Administration"
+      ]
+    },
+    {
+      "method": "exhaustive",
+      "k": 2,
+      "rmse": 9152.274782350903,
+      "r2": 0.8965609365509308,
+      "mae": 7181.327131714381,
+      "features": [
+        "R&D Spend",
+        "Administration"
+      ]
+    },
+    {
+      "method": "lasso",
+      "k": 3,
+      "rmse": 8995.905803361418,
+      "r2": 0.900065308303732,
+      "mae": 6979.152252370402,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration"
+      ]
+    },
+    {
+      "method": "elastic",
+      "k": 3,
+      "rmse": 8995.905803361418,
+      "r2": 0.900065308303732,
+      "mae": 6979.152252370402,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration"
+      ]
+    },
+    {
+      "method": "rfe",
+      "k": 3,
+      "rmse": 8995.905803361413,
+      "r2": 0.9000653083037321,
+      "mae": 6979.1522523704,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "forward",
+      "k": 3,
+      "rmse": 8995.905803361413,
+      "r2": 0.9000653083037321,
+      "mae": 6979.1522523704,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "exhaustive",
+      "k": 3,
+      "rmse": 8995.905803361413,
+      "r2": 0.9000653083037321,
+      "mae": 6979.1522523704,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend"
+      ]
+    },
+    {
+      "method": "lasso",
+      "k": 4,
+      "rmse": 9055.957752262138,
+      "r2": 0.8987266318421849,
+      "mae": 6961.48684573094,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration",
+        "State_Florida"
+      ]
+    },
+    {
+      "method": "elastic",
+      "k": 4,
+      "rmse": 9055.957752262138,
+      "r2": 0.8987266318421849,
+      "mae": 6961.48684573094,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration",
+        "State_Florida"
+      ]
+    },
+    {
+      "method": "rfe",
+      "k": 4,
+      "rmse": 9055.95775226214,
+      "r2": 0.8987266318421848,
+      "mae": 6961.486845730942,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend",
+        "State_Florida"
+      ]
+    },
+    {
+      "method": "forward",
+      "k": 4,
+      "rmse": 9015.112541602855,
+      "r2": 0.8996381209725023,
+      "mae": 6974.873066154209,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend",
+        "State_New York"
+      ]
+    },
+    {
+      "method": "exhaustive",
+      "k": 4,
+      "rmse": 9316.536408850929,
+      "r2": 0.8928146452937935,
+      "mae": 7436.6155394496045,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "State_Florida",
+        "State_New York"
+      ]
+    },
+    {
+      "method": "lasso",
+      "k": 5,
+      "rmse": 9055.957323497803,
+      "r2": 0.8987266414319839,
+      "mae": 6961.477813275557,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration",
+        "State_Florida",
+        "State_New York"
+      ]
+    },
+    {
+      "method": "elastic",
+      "k": 5,
+      "rmse": 9055.957323497803,
+      "r2": 0.8987266414319839,
+      "mae": 6961.477813275557,
+      "features": [
+        "R&D Spend",
+        "Marketing Spend",
+        "Administration",
+        "State_Florida",
+        "State_New York"
+      ]
+    },
+    {
+      "method": "rfe",
+      "k": 5,
+      "rmse": 9055.957323497809,
+      "r2": 0.8987266414319838,
+      "mae": 6961.477813275555,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend",
+        "State_Florida",
+        "State_New York"
+      ]
+    },
+    {
+      "method": "forward",
+      "k": 5,
+      "rmse": 9055.95732349781,
+      "r2": 0.8987266414319837,
+      "mae": 6961.477813275557,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend",
+        "State_New York",
+        "State_Florida"
+      ]
+    },
+    {
+      "method": "exhaustive",
+      "k": 5,
+      "rmse": 9055.957323497809,
+      "r2": 0.8987266414319838,
+      "mae": 6961.477813275555,
+      "features": [
+        "R&D Spend",
+        "Administration",
+        "Marketing Spend",
+        "State_Florida",
+        "State_New York"
+      ]
+    }
+  ],
+  "browser_chart_mapping": "passed: 25 RMSE and 25 R2 coordinates, five series each",
+  "browser_recalculation": "passed: all 25 feature sets, RMSE and R2 values",
+  "browser_max_metric_absolute_error": 1.4551915228366852e-11
+}

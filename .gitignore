@@ -1,0 +1,9 @@
+.qa-deps/
+.venv/
+__pycache__/
+*.py[cod]
+node_modules/
+.openai/
+*.tar.gz
+*.zip
+upstream-50_Startups.csv

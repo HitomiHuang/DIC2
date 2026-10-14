@@ -1,0 +1,13 @@
+{
+  "name": "dic2-regression-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "50 Startups 多元線性迴歸與五種特徵選取方法互動比較",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node qa-ui.mjs",
+    "verify": "python verify_calculations.py",
+    "prepare-data": "python prepare-defaults.py"
+  },
+  "engines": { "node": ">=18" }
+}
