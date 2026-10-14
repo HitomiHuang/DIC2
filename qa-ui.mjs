@@ -8,6 +8,8 @@ class Element {
  replaceChildren(...v){this.children=v;if(v[0]?.value!==undefined)this.value=v[0].value}
  click(){}
  scrollIntoView(){}
+ showModal(){this.open=true}
+ close(){this.open=false}
 }
 const html=fs.readFileSync('dist/index.html','utf8');
 const elements=Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Element()]));
@@ -33,4 +35,14 @@ elements.run.onclick();assert.equal(worker.data.seed,19);assert.equal(worker.dat
 worker.onmessage({data:{result:context.window.STARTUP_DATA.result}});assert.equal(elements.dirty.hidden,true);
 elements.run.onclick();elements.cancel.onclick();assert.equal(elements.cancel.hidden,true);
 elements.export.onclick();
+elements.viewmodel.onclick();assert.equal(elements.modelview.hidden,false);assert.equal(elements.analysisview.hidden,true);
+elements.viewdata.onclick();assert.equal(elements.dataview.hidden,false);assert.equal(elements.modelview.hidden,true);
+elements.settingsopen.onclick();assert.equal(elements.settingsdialog.open,true);
+elements.previewdata.onclick();assert.equal(elements.settingsdialog.open,false);assert.equal(elements.dataview.hidden,false);assert.equal(elements.datapanel.open,true);
+elements.viewanalysis.onclick();assert.equal(elements.analysisview.hidden,false);assert.equal(elements.dataview.hidden,true);
+elements.inspectmodel.onclick();assert.equal(elements.modelview.hidden,false);assert.match(elements.selectionname.textContent,/Lasso/);
+elements.backanalysis.onclick();assert.equal(elements.analysisview.hidden,false);
+elements.settingsopen.onclick();elements.seed.value='27';elements.seed.oninput();elements.run.onclick();
+worker.onmessage({data:{result:context.window.STARTUP_DATA.result}});
+assert.equal(elements.settingsdialog.open,false);assert.equal(elements.dirty.hidden,true);assert.equal(elements.analysisview.hidden,false);
 console.log('PASS: 50 Startups defaults, combined and individual charts, metric switch, feature count, legend filters, predictor state, stale settings, worker settings, cancellation, export.');

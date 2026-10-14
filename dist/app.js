@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 const methods={lasso:'Lasso',forward:'Forward SFS',rfe:'RFE',elastic:'ElasticNet',exhaustive:'Exhaustive Search'};
-const colors={lasso:'#4952b8',forward:'#c87838',rfe:'#53795f',elastic:'#b06486',exhaustive:'#8b7845'};
+const colors={lasso:'#176e63',forward:'#c17b35',rfe:'#5375a6',elastic:'#a16b8a',exhaustive:'#8b8050'};
 const dashes={lasso:'',forward:'8 4',rfe:'3 3',elastic:'10 3 2 3',exhaustive:'6 3'};
 const symbols={lasso:'●',forward:'◆',rfe:'■',elastic:'▲',exhaustive:'✕'};
 const defaults=window.STARTUP_DATA;
@@ -38,7 +38,7 @@ function chart(id,key,data,wide=false){
 function describe(r){return methods[r.method]+' · k='+r.k+' · RMSE '+fmt(r.rmse,3)+' · R² '+fmt(r.r2,4)+' ｜ '+r.features.join('、')}
 function selectModel(r,redraw){selected=r.method;selectedK=r.k;if(redraw)render();else renderModel(r);$('pointdetail').textContent=describe(r)}
 function renderModel(r){
- currentModel=r;$('modeltitle').textContent=methods[r.method]+' · k='+r.k+' 的模型細節';$('featurechips').replaceChildren(...r.features.map(f=>textCell('span',f)));
+ currentModel=r;$('modeltitle').textContent=methods[r.method]+' / k='+r.k; $('selectionname').textContent=methods[r.method]+' · k='+r.k; $('selectionrmse').textContent=fmt(r.rmse,2); $('selectionr2').textContent=fmt(r.r2,4); $('selectionfeatures').replaceChildren(...r.features.map(f=>textCell('span',f)));$('featurechips').replaceChildren(...r.features.map(f=>textCell('span',f)));
  let formula=resultTarget+' = '+fmt(r.intercept,2);r.features.forEach((f,i)=>{const c=r.coefficients[i];formula+=' '+(c>=0?'+':'−')+' '+fmt(Math.abs(c),4)+' × '+f});$('equation').textContent=formula;
  $('predictor').hidden=!isDefault;
  for(const [id,feature] of [['predrd','R&D Spend'],['predmarketing','Marketing Spend'],['predadmin','Administration']])$(id).disabled=!r.features.includes(feature);
@@ -53,21 +53,21 @@ function predict(){
 }
 function render(){
  const data=activeRows(),atK=data.filter(r=>r.k===selectedK).sort((a,b)=>a.rmse-b.rmse),best=atK[0];
- $('rmselabel').textContent=mode==='compare'?'k='+selectedK+' · 已顯示方法最低 RMSE':'目前模型 RMSE';
+ $('rmselabel').textContent=mode==='compare'?'最低 RMSE · k='+selectedK:'目前模型 RMSE';
  $('bestRMSE').textContent=fmt(best.rmse,2);$('bestR2').textContent=fmt(best.r2,4);$('bestK').textContent=selectedK+' 個';$('bestMethod').textContent=methods[best.method];
  $('comparemode').setAttribute('aria-pressed',String(mode==='compare'));$('singlemode').setAttribute('aria-pressed',String(mode==='single'));
  $('combinedchart').hidden=mode!=='compare';$('singlecharts').hidden=mode!=='single';$('metric-controls').hidden=mode!=='compare';$('methodtabs').hidden=mode!=='single';
  $('metricrmse').setAttribute('aria-pressed',String(metric==='rmse'));$('metricr2').setAttribute('aria-pressed',String(metric==='r2'));
- $('plottitle').textContent=mode==='compare'?'五種方法的 '+(metric==='rmse'?'RMSE':'R²')+' 比較':methods[selected]+' 的特徵選取表現';
+ $('plottitle').textContent=mode==='compare'?'五種方法的 '+(metric==='rmse'?'RMSE':'R²')+' 比較':methods[selected]+' / 特徵數與模型表現';
  $('plotsubtitle').textContent=mode==='compare'?'顯示 '+activeMethods.size+' / 5 種方法 · '+(metric==='rmse'?'RMSE 越低越好；單位與目標相同':'R² 越高越好；無單位'):'相同測試集 · RMSE / R²';
  $('legend').replaceChildren();
  if(mode==='compare')for(const m of Object.keys(methods)){const b=button(symbols[m]+' '+methods[m],activeMethods.has(m),()=>{if(activeMethods.has(m)){if(activeMethods.size===1)return;activeMethods.delete(m)}else activeMethods.add(m);render()});b.title='顯示或隱藏 '+methods[m];b.style.borderColor=activeMethods.has(m)?colors[m]:'';$('legend').append(b)}
  $('methodtabs').replaceChildren(...Object.keys(methods).map(m=>button(methods[m],m===selected,()=>{selected=m;render()})));
  if(mode==='compare')chart('combinedchart',metric,data,true);else{chart('rmsechart','rmse',data);chart('r2chart','r2',data)}
  const maxK=Math.max(...results.map(r=>r.k));$('kbuttons').replaceChildren(...Array.from({length:maxK},(_,i)=>button('k = '+(i+1),selectedK===i+1,()=>{selectedK=i+1;render()})));
- $('tabletitle').textContent=mode==='compare'?'k='+selectedK+'：相同特徵數下的方法比較':methods[selected]+'：各特徵數結果';
+ $('tabletitle').textContent=mode==='compare'?'方法排名 / k = '+selectedK:methods[selected]+'：各特徵數結果';
  const tableRows=mode==='compare'?atK:data.slice().sort((a,b)=>a.k-b.k);$('rows').replaceChildren();
- for(const r of tableRows){const tr=document.createElement('tr');if(r.rmse===best.rmse&&r.k===best.k)tr.className='best';const td=document.createElement('td'),dot=document.createElement('span');dot.className='method-dot';dot.style.background=colors[r.method];const link=document.createElement('button');link.textContent=methods[r.method];link.setAttribute('aria-label','檢視 '+methods[r.method]+' k='+r.k+' 模型');link.onclick=()=>selectModel(r,true);td.append(dot,link);tr.append(td);for(const v of [r.k,r.features.join(', '),fmt(r.rmse,3),fmt(r.r2,4)])tr.append(textCell('td',v));$('rows').append(tr)}
+ for(const r of tableRows){const tr=document.createElement('tr');if(r.rmse===best.rmse&&r.k===best.k)tr.className='best';const td=document.createElement('td'),dot=document.createElement('span');dot.className='method-dot';dot.style.background=colors[r.method];const link=document.createElement('button');link.textContent=methods[r.method];link.setAttribute('aria-label','檢視 '+methods[r.method]+' k='+r.k+' 模型');link.onclick=()=>{selectModel(r,true);showView('model')};td.append(dot,link);tr.append(td);for(const v of [r.k,r.features.join(', '),fmt(r.rmse,3),fmt(r.r2,4)])tr.append(textCell('td',v));$('rows').append(tr)}
  const shown=atK.find(r=>r.method===selected)||best;selected=shown.method;renderModel(shown);$('pointdetail').textContent=describe(shown);
 }
 function parseCSV(text){const rows=[];let row=[],value='',quoted=false;text=text.replace(/^\uFEFF/,'');for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){value+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(value);value=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(value);if(row.some(v=>v!==''))rows.push(row);row=[];value=''}else value+=c}if(quoted)throw Error('CSV 引號未正確關閉。');row.push(value);if(row.some(v=>v!==''))rows.push(row);return rows}
@@ -82,7 +82,7 @@ function reset(){
 }
 $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>2*1024*1024)throw Error('檔案超過 2 MB。');setCSV(await f.text(),f.name)}catch(err){$('status').textContent=err.message}e.target.value=''};
 $('sample').onclick=reset;
-$('previewdata').onclick=()=>{$('datapanel').open=true;$('datapanel').scrollIntoView({behavior:'smooth',block:'start'})};
+$('previewdata').onclick=()=>{if($('settingsdialog').open)$('settingsdialog').close();showView('data');$('datapanel').open=true;$('datapanel').scrollIntoView({behavior:'smooth',block:'start'})};
 $('split').oninput=()=>{$('splitval').textContent=$('split').value+'%';markDirty()};
 $('seed').oninput=markDirty;$('target').onchange=()=>{$('targetname').textContent=$('target').value;markDirty()};
 $('comparemode').onclick=()=>{mode='compare';render()};
@@ -99,7 +99,7 @@ $('run').onclick=()=>{
   worker.onmessage=({data})=>{
    if(data.status)$('status').textContent=data.status;
    if(data.error){$('status').textContent='運算失敗：'+data.error;worker.terminate();worker=null;lock(false)}
-   if(data.result){results=data.result.rows;selectedK=Math.min(selectedK,data.result.maxk);$('source').textContent=name+' · 新運算結果';setContext(data.result,target,test,seed,name);$('dirty').hidden=true;$('status').textContent='分析完成。';render();lock(false)}
+   if(data.result){results=data.result.rows;selectedK=Math.min(selectedK,data.result.maxk);$('source').textContent=name+' · 新運算結果';setContext(data.result,target,test,seed,name);$('dirty').hidden=true;$('status').textContent='分析完成。';render();lock(false);if($('settingsdialog').open)$('settingsdialog').close();showView('analysis')}
   };
   worker.onerror=()=>{$('status').textContent='Python 環境載入失敗，請檢查網路後重試。';worker.terminate();worker=null;lock(false)};
   worker.postMessage({csv,target,test,seed});
@@ -107,6 +107,26 @@ $('run').onclick=()=>{
 };
 $('cancel').onclick=()=>{worker?.terminate();worker=null;lock(false);$('status').textContent='已取消，保留上次結果。'};
 $('export').onclick=()=>{const escape=v=>'"'+String(v).replaceAll('"','""')+'"',rows=[['Method','Number of Features','Selected Features','RMSE','R-squared','Evaluation Context'],...results.map(r=>[methods[r.method],r.k,r.features.join(', '),r.rmse,r.r2,evaluation])];const blob=new Blob(['\uFEFF'+rows.map(r=>r.map(escape).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='50-startups-method-comparison.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-$('settingspanel').open=window.innerWidth>720;
-window.addEventListener('resize',()=>{if(window.innerWidth>720)$('settingspanel').open=true;render()});
+$('settingspanel').open=true;
+window.addEventListener('resize',()=>{render()});
+
+function showView(view){
+ const titles={analysis:'分析總覽',model:'模型試算',data:'資料與方法'};
+ for(const key of Object.keys(titles)){
+  $(key+'view').hidden=key!==view;
+  $('view'+key).setAttribute('aria-current',key===view?'page':'false');
+ }
+ $('viewtitle').textContent=titles[view];
+ $('main').focus?.({preventScroll:true});
+ window.scrollTo?.({top:0,behavior:'instant'});
+}
+function openSettings(){$('settingsdialog').showModal()}
+for(const view of ['analysis','model','data'])$('view'+view).onclick=()=>showView(view);
+$('settingsopen').onclick=openSettings;
+$('applysettings').onclick=openSettings;
+$('settingsclose').onclick=()=>$('settingsdialog').close();
+$('settingsdialog').onclick=e=>{if(e.target===$('settingsdialog')){const rect=$('settingsdialog').getBoundingClientRect();if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)$('settingsdialog').close()}};
+$('inspectmodel').onclick=()=>showView('model');
+$('backanalysis').onclick=()=>showView('analysis');
+
 reset();
