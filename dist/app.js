@@ -59,7 +59,7 @@ function render(){
  $('combinedchart').hidden=mode!=='compare';$('singlecharts').hidden=mode!=='single';$('metric-controls').hidden=mode!=='compare';$('methodtabs').hidden=mode!=='single';
  $('metricrmse').setAttribute('aria-pressed',String(metric==='rmse'));$('metricr2').setAttribute('aria-pressed',String(metric==='r2'));
  $('plottitle').textContent=mode==='compare'?'五種方法的 '+(metric==='rmse'?'RMSE':'R²')+' 比較':methods[selected]+' 的特徵選取表現';
- $('plotsubtitle').textContent=mode==='compare'?'顯示 '+activeMethods.size+' / 5 種方法 · '+(metric==='rmse'?'RMSE 越低越好；單位與目標相同':'R² 越高越好；無單位'):'同時檢視誤差與解釋程度 · 相同測試資料';
+ $('plotsubtitle').textContent=mode==='compare'?'顯示 '+activeMethods.size+' / 5 種方法 · '+(metric==='rmse'?'RMSE 越低越好；單位與目標相同':'R² 越高越好；無單位'):'相同測試集 · RMSE / R²';
  $('legend').replaceChildren();
  if(mode==='compare')for(const m of Object.keys(methods)){const b=button(symbols[m]+' '+methods[m],activeMethods.has(m),()=>{if(activeMethods.has(m)){if(activeMethods.size===1)return;activeMethods.delete(m)}else activeMethods.add(m);render()});b.title='顯示或隱藏 '+methods[m];b.style.borderColor=activeMethods.has(m)?colors[m]:'';$('legend').append(b)}
  $('methodtabs').replaceChildren(...Object.keys(methods).map(m=>button(methods[m],m===selected,()=>{selected=m;render()})));
@@ -78,7 +78,7 @@ function setCSV(text,name,useDefault=false){
 }
 function markDirty(){$('dirty').hidden=false;$('status').textContent='資料或設定已變更，請重新執行以更新結果。'}
 function reset(){
- setCSV(defaults.csv,'50_Startups.csv',true);results=defaults.result.rows;selectedK=2;selected='lasso';mode='compare';metric='rmse';activeMethods=new Set(Object.keys(methods));$('split').value='20';$('splitval').textContent='20%';$('seed').value='42';$('dirty').hidden=true;$('source').textContent='50 Startups · 已計算結果';setContext(defaults.result,'Profit',.2,42,'50 Startups');$('status').textContent='已載入預先計算的真實資料結果，可直接探索圖表。';render();
+ setCSV(defaults.csv,'50_Startups.csv',true);results=defaults.result.rows;selectedK=2;selected='lasso';mode='compare';metric='rmse';activeMethods=new Set(Object.keys(methods));$('split').value='20';$('splitval').textContent='20%';$('seed').value='42';$('dirty').hidden=true;$('source').textContent='50 Startups · 已計算結果';setContext(defaults.result,'Profit',.2,42,'50 Startups');$('status').textContent='預設結果已載入。';render();
 }
 $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>2*1024*1024)throw Error('檔案超過 2 MB。');setCSV(await f.text(),f.name)}catch(err){$('status').textContent=err.message}e.target.value=''};
 $('sample').onclick=reset;
@@ -90,7 +90,7 @@ $('singlemode').onclick=()=>{mode='single';render()};
 $('metricrmse').onclick=()=>{metric='rmse';render()};
 $('metricr2').onclick=()=>{metric='r2';render()};
 for(const id of ['predrd','predmarketing','predadmin'])$(id).oninput=predict;$('predstate').onchange=predict;
-function lock(on){busy=on;for(const id of ['file','sample','target','split','seed','run'])$(id).disabled=on;$('cancel').hidden=!on;$('run').firstChild.textContent=on?'運算中…':'重新執行五種方法 '}
+function lock(on){busy=on;for(const id of ['file','sample','target','split','seed','run'])$(id).disabled=on;$('cancel').hidden=!on;$('run').firstChild.textContent=on?'運算中…':'執行分析 '}
 $('run').onclick=()=>{
  if(busy||!csv)return;const seed=Number($('seed').value);if($('seed').value===''||!Number.isInteger(seed)||seed<0||seed>2147483647){$('status').textContent='隨機種子必須為 0–2147483647 的整數。';return}
  lock(true);$('status').textContent='準備分析環境…';const target=$('target').value,test=Number($('split').value)/100,name=isDefault?'50 Startups':'自訂 CSV';
@@ -99,7 +99,7 @@ $('run').onclick=()=>{
   worker.onmessage=({data})=>{
    if(data.status)$('status').textContent=data.status;
    if(data.error){$('status').textContent='運算失敗：'+data.error;worker.terminate();worker=null;lock(false)}
-   if(data.result){results=data.result.rows;selectedK=Math.min(selectedK,data.result.maxk);$('source').textContent=name+' · 新運算結果';setContext(data.result,target,test,seed,name);$('dirty').hidden=true;$('status').textContent='五種方法已完成。可切換比較指標、單一方法與特徵數。';render();lock(false)}
+   if(data.result){results=data.result.rows;selectedK=Math.min(selectedK,data.result.maxk);$('source').textContent=name+' · 新運算結果';setContext(data.result,target,test,seed,name);$('dirty').hidden=true;$('status').textContent='分析完成。';render();lock(false)}
   };
   worker.onerror=()=>{$('status').textContent='Python 環境載入失敗，請檢查網路後重試。';worker.terminate();worker=null;lock(false)};
   worker.postMessage({csv,target,test,seed});
